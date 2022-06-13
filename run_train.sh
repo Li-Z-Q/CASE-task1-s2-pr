@@ -3,7 +3,7 @@
 source activate
 conda activate py38
 \
-export method=t5
+export method=t5_encoder
 \
 export use_cache=False
 export cache_dir=./data/subtask2-sentence/cache_t5_base
@@ -12,7 +12,7 @@ export dev_data_path=./data/subtask2-sentence/en-train-dev.json
 \
 export pretrained_model=t5-base
 \
-export gpu_id=3
+export gpu_id=6
 export random_seed=1234
 \
 export max_seq_len=64

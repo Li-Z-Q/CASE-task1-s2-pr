@@ -13,13 +13,13 @@ def do_tokenize(raw_datas, tokenizer):
     input_ids = inputs['input_ids']
     attention_mask = inputs['attention_mask']
 
-    prompt = 'answer is yes or no ? '
-    inputs = tokenizer([prompt for _ in range(len(raw_datas['text']))], return_tensors="pt", truncation=True, max_length=args.max_seq_len, padding='longest')
-    decoder_input_ids = inputs['input_ids']
+    # prompt = 'answer is yes or no ? '
+    # inputs = tokenizer([prompt for _ in range(len(raw_datas['text']))], return_tensors="pt", truncation=True, max_length=args.max_seq_len, padding='longest')
+    # decoder_input_ids = inputs['input_ids']
 
     labels = torch.tensor(raw_datas['label'])
 
-    dataset = TensorDataset(input_ids, attention_mask, decoder_input_ids, labels)
+    dataset = TensorDataset(input_ids, attention_mask, labels)
     return dataset
 
 

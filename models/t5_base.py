@@ -6,7 +6,7 @@ class Model(nn.Module):
     def __init__(self, pretrained_model, config):
         super().__init__()
         config.output_hidden_states = True
-        self.t5 = T5Model.from_pretrained(pretrained_model, config=config)
+        self.t5 = T5EncoderModel.from_pretrained(pretrained_model, config=config)
         self.linear = nn.Linear(config.hidden_size, 2)
         self.log_softmax = nn.LogSoftmax(dim=-1)
         self.nllloss = nn.NLLLoss(reduction='sum')
@@ -21,12 +21,11 @@ class Model(nn.Module):
 
         outputs = self.t5(
             input_ids=input_ids,
-            attention_mask=attention_mask,
-            decoder_input_ids=decoder_input_ids
+            attention_mask=attention_mask
         )
 
         last_hidden_state = outputs.last_hidden_state
-        sentence_embedding = torch.mean(last_hidden_state, dim=1)
+        sentence_embedding = torch.max(last_hidden_state, dim=1)[0]
         logits = self.log_softmax(self.linear(sentence_embedding))
 
         loss = self.nllloss(logits, labels)

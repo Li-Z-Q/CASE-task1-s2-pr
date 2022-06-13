@@ -16,12 +16,11 @@ def dev(model, dev_dataloader):
             inputs = {
                 'input_ids': batch[0].cuda(args.gpu_id),
                 'attention_mask': batch[1].cuda(args.gpu_id),
-                'decoder_input_ids': batch[2].cuda(args.gpu_id),
-                'labels': batch[3].cuda(args.gpu_id)
+                'labels': batch[2].cuda(args.gpu_id)
             }
             output = model.forward(**inputs)
 
-        gold_labels += batch[3].cpu().tolist()
+        gold_labels += batch[2].cpu().tolist()
         pre_labels += torch.argmax(output['logits'], dim=1).cpu().tolist()
     assert len(gold_labels) == len(pre_labels)
 
@@ -60,8 +59,7 @@ if __name__ == '__main__':
             inputs = {
                 'input_ids': batch[0].cuda(args.gpu_id),
                 'attention_mask': batch[1].cuda(args.gpu_id),
-                'decoder_input_ids': batch[2].cuda(args.gpu_id),
-                'labels': batch[3].cuda(args.gpu_id)
+                'labels': batch[2].cuda(args.gpu_id)
             }
             outputs = model.forward(**inputs)
             loss = outputs['loss']
