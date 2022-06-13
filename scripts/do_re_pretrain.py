@@ -3,7 +3,7 @@ import torch
 import json
 import random
 from torch.utils.data import RandomSampler, DataLoader, TensorDataset, SequentialSampler
-from transformers import AdamW, get_linear_schedule_with_warmup
+from transformers import AdamW, get_linear_schedule_with_warmup, BertConfig
 
 
 def do_tokenize(raw_datas, tokenizer):
@@ -33,12 +33,12 @@ def add_mask(datas):
 
 if __name__ == '__main__':
 
-    gpu_id = 2
+    gpu_id = 6
 
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    config = BertConfig.from_pretrained("bert-base-uncased")
     model = BertForMaskedLM.from_pretrained("bert-base-uncased").cuda(gpu_id)
     optimizer = AdamW(model.parameters(), lr=1e-5)
-
     train_raw_datas = json.load(open('../data/subtask2-sentence/en-train-train.json'))
     random.shuffle(train_raw_datas)
     train_raw_datas = {
@@ -53,6 +53,7 @@ if __name__ == '__main__':
 
     model.train()
     for e in range(5):
+        print("e: ", e)
         for batch in train_dataloader:
             inputs = {
                 'input_ids': batch[0].cuda(gpu_id),
@@ -68,5 +69,7 @@ if __name__ == '__main__':
             optimizer.step()
             model.zero_grad()
 
-    model.save_pretrained('../saved_model/re_pretrain/re_pretrain_model')
+    model.save_pretrained('../saved_models/re_pretrain/re_pretrain_model')
+    tokenizer.save_pretrained('../saved_models/re_pretrain/re_pretrain_model')
+    config.save_pretrained('../saved_models/re_pretrain/re_pretrain_model')
     print('save done !')
