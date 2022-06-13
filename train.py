@@ -33,11 +33,12 @@ if __name__ == '__main__':
     random_setter.set_random()
 
     tokenizer = BertTokenizer.from_pretrained(args.pretrained_model)
+    train_dataloader, dev_dataloader = data_reader.read_data(tokenizer=tokenizer)
+
     config = BertConfig.from_pretrained(args.pretrained_model, num_labels=2)
     model = BaseBert.from_pretrained(pretrained_model_name_or_path=args.pretrained_model, config=config).cuda(args.gpu_id)
     print('\n')  # always print log
 
-    train_dataloader, dev_dataloader = data_reader.read_data(tokenizer=tokenizer)
     total_step = int(len(train_dataloader) * args.epochs // args.gradient_accumulation_steps)
 
     no_decay = ['bias', 'LayerNorm.weight']

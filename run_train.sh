@@ -6,7 +6,7 @@ conda activate py38
 export method=pos_ner
 \
 export use_cache=False
-export cache_dir=./data/subtask2-sentence/cache_bert_base
+export cache_dir=./data/subtask2-sentence/cache_pos_ner_base
 export train_data_path=./data/subtask2-sentence/en-train-train.json
 export dev_data_path=./data/subtask2-sentence/en-train-dev.json
 \
