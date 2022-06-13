@@ -25,6 +25,8 @@ parser.add_argument('-warm_ratio', default=1.0, type=float)
 parser.add_argument('-max_grad_norm', default=99999, type=float)
 parser.add_argument('-gradient_accumulation_steps', default=1, type=int)
 
+parser.add_argument('-over_sample_scale', default=4, type=int)
+
 
 args = parser.parse_args()
 for k in args.__dict__:

@@ -3,7 +3,7 @@
 source activate
 conda activate py38
 \
-export method=bert
+export method=over_sample
 \
 export use_cache=False
 export cache_dir=./data/subtask2-sentence/cache_bert_base
@@ -26,6 +26,8 @@ export weight_decay=1e-4
 export warm_ratio=1.0
 export max_grad_norm=99999
 export gradient_accumulation_steps=1
+\
+export over_sample_scale=4
 \
 nohup python -u train.py \
   -method ${method} \
@@ -52,4 +54,6 @@ nohup python -u train.py \
   -max_grad_norm ${max_grad_norm} \
   -gradient_accumulation_steps ${gradient_accumulation_steps} \
   \
-  > ./logs/${method}/log.txt &
+  -over_sample_scale ${over_sample_scale} \
+  \
+  > ./logs/${method}/log_over_sample_scale_${over_sample_scale}.txt &

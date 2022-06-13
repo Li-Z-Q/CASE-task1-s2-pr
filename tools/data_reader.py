@@ -6,6 +6,25 @@ import torch
 import random
 from torch.utils.data import RandomSampler, DataLoader, TensorDataset, SequentialSampler
 
+def over_sample(dataset):
+    new_datas = {'text': [], 'label': []}
+
+    for text, label in zip(dataset['text'], dataset['label']):
+        if label == 1:
+            new_datas['text'] += [text for _ in range(args.over_sample_scale)]
+            new_datas['label'] += [label for _ in range(args.over_sample_scale)]
+        else:
+            new_datas['text'] += [text]
+            new_datas['label'] += [label]
+
+    random.seed(args.random_seed)
+    random.shuffle(new_datas['text'])
+    random.seed(args.random_seed)
+    random.shuffle(new_datas['label'])
+
+    print('over sample done !')
+    return new_datas
+
 
 def do_tokenize(raw_datas, tokenizer):
     inputs = tokenizer(raw_datas['text'], padding='max_length', max_length=args.max_seq_len, return_tensors='pt', truncation=True)
@@ -32,6 +51,7 @@ def read_data(tokenizer):
             'text': [d['text'] for d in train_raw_datas],
             'label': [d['label'] for d in train_raw_datas]
         }
+        train_raw_datas = over_sample(train_raw_datas)
 
         dev_raw_datas = json.load(open(args.dev_data_path))
         dev_raw_datas = {
