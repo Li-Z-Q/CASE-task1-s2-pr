@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 \
-source activate
+source activate # set ff=unix
 conda activate py38
 \
 export method=over_sample

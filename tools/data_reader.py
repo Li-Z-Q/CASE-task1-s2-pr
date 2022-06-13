@@ -2,6 +2,7 @@ from args import args
 
 import os
 import json
+from collections import Counter
 import torch
 import random
 from torch.utils.data import RandomSampler, DataLoader, TensorDataset, SequentialSampler
@@ -52,6 +53,7 @@ def read_data(tokenizer):
             'label': [d['label'] for d in train_raw_datas]
         }
         train_raw_datas = over_sample(train_raw_datas)
+        print("Counter([d['label'] for d in train_raw_datas]): ", Counter([l for l in train_raw_datas['label']]))
 
         dev_raw_datas = json.load(open(args.dev_data_path))
         dev_raw_datas = {
