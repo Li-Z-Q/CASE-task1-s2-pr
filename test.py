@@ -3,7 +3,7 @@ import random
 import json
 from transformers import BertTokenizer, BertConfig
 from tools import result_displayer
-from models.bert_base import BaseBert
+from models.t5_base import BaseBert
 
 
 def test():

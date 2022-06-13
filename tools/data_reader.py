@@ -9,14 +9,17 @@ from torch.utils.data import RandomSampler, DataLoader, TensorDataset, Sequentia
 
 
 def do_tokenize(raw_datas, tokenizer):
-    inputs = tokenizer(raw_datas['text'], padding='max_length', max_length=args.max_seq_len, return_tensors='pt', truncation=True)
-
+    inputs = tokenizer(raw_datas['text'], return_tensors="pt", truncation=True, max_length=args.max_seq_len, padding='longest')
     input_ids = inputs['input_ids']
     attention_mask = inputs['attention_mask']
-    token_type_ids = inputs['token_type_ids']
+
+    prompt = 'answer is yes or no : <extra_id_0>'
+    inputs = tokenizer([prompt for _ in range(len(raw_datas['text']))], return_tensors="pt", truncation=True, max_length=args.max_seq_len, padding='longest')
+    decoder_input_ids = inputs['input_ids']
+
     labels = torch.tensor(raw_datas['label'])
 
-    dataset = TensorDataset(input_ids, attention_mask, token_type_ids, labels)
+    dataset = TensorDataset(input_ids, attention_mask, decoder_input_ids, labels)
     return dataset
 
 

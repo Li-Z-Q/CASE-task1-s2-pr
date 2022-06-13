@@ -1,9 +1,9 @@
 from args import args
-
+import os
 import torch
 import torch.nn as nn
-from models.bert_base import BaseBert
-from transformers import BertTokenizer, BertConfig
+from models.t5_base import Model
+from transformers import T5Tokenizer, T5Config
 from tools import data_reader, random_setter, result_displayer
 from transformers import AdamW, get_linear_schedule_with_warmup
 
@@ -16,7 +16,7 @@ def dev(model, dev_dataloader):
             inputs = {
                 'input_ids': batch[0].cuda(args.gpu_id),
                 'attention_mask': batch[1].cuda(args.gpu_id),
-                'token_type_ids': batch[2].cuda(args.gpu_id),
+                'decoder_input_ids': batch[2].cuda(args.gpu_id),
                 'labels': batch[3].cuda(args.gpu_id)
             }
             output = model.forward(**inputs)
@@ -32,9 +32,9 @@ if __name__ == '__main__':
 
     random_setter.set_random()
 
-    tokenizer = BertTokenizer.from_pretrained(args.pretrained_model)
-    config = BertConfig.from_pretrained(args.pretrained_model, num_labels=2)
-    model = BaseBert.from_pretrained(pretrained_model_name_or_path=args.pretrained_model, config=config).cuda(args.gpu_id)
+    tokenizer = T5Tokenizer.from_pretrained(args.pretrained_model, model_max_length=512)
+    config = T5Config.from_pretrained(args.pretrained_model, num_labels=2)
+    model = Model(args.pretrained_model, config=config).cuda(args.gpu_id)
     print('\n')  # always print log
 
     train_dataloader, dev_dataloader = data_reader.read_data(tokenizer=tokenizer)
@@ -60,7 +60,7 @@ if __name__ == '__main__':
             inputs = {
                 'input_ids': batch[0].cuda(args.gpu_id),
                 'attention_mask': batch[1].cuda(args.gpu_id),
-                'token_type_ids': batch[2].cuda(args.gpu_id),
+                'decoder_input_ids': batch[2].cuda(args.gpu_id),
                 'labels': batch[3].cuda(args.gpu_id)
             }
             outputs = model.forward(**inputs)
@@ -81,11 +81,9 @@ if __name__ == '__main__':
 
         dev_result = dev(model, dev_dataloader)
         save_dir = './saved_models/' + args.method
+        os.mkdir(save_dir) if os.path.exists(save_dir) == False else None
         if dev_result['f'] > best_dev_result:
-            tokenizer.save_pretrained(save_dir)
-            model.save_pretrained(save_dir)
-            config.save_pretrained(save_dir)
-            best_dev_result = dev_result['f']
+            model.save(save_dir)
 
     print("\n\nbest_dev_result: ", best_dev_result)
     print('done !')
