@@ -13,10 +13,9 @@ def do_tokenize(raw_datas, tokenizer):
 
     input_ids = inputs['input_ids']
     attention_mask = inputs['attention_mask']
-    token_type_ids = inputs['token_type_ids']
     labels = torch.tensor(raw_datas['label'])
 
-    dataset = TensorDataset(input_ids, attention_mask, token_type_ids, labels)
+    dataset = TensorDataset(input_ids, attention_mask, labels)
     return dataset
 
 

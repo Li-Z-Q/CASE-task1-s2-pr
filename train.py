@@ -3,7 +3,7 @@ from args import args
 import torch
 import torch.nn as nn
 from models.bert_base import BaseBert
-from transformers import BertTokenizer, BertConfig
+from transformers import RobertaTokenizer, RobertaConfig
 from tools import data_reader, random_setter, result_displayer
 from transformers import AdamW, get_linear_schedule_with_warmup
 
@@ -16,12 +16,11 @@ def dev(model, dev_dataloader):
             inputs = {
                 'input_ids': batch[0].cuda(args.gpu_id),
                 'attention_mask': batch[1].cuda(args.gpu_id),
-                'token_type_ids': batch[2].cuda(args.gpu_id),
-                'labels': batch[3].cuda(args.gpu_id)
+                'labels': batch[2].cuda(args.gpu_id)
             }
             output = model.forward(**inputs)
 
-        gold_labels += batch[3].cpu().tolist()
+        gold_labels += batch[2].cpu().tolist()
         pre_labels += torch.argmax(output['logits'], dim=1).cpu().tolist()
     assert len(gold_labels) == len(pre_labels)
 
@@ -32,8 +31,8 @@ if __name__ == '__main__':
 
     random_setter.set_random()
 
-    tokenizer = BertTokenizer.from_pretrained(args.pretrained_model)
-    config = BertConfig.from_pretrained(args.pretrained_model, num_labels=2)
+    tokenizer = RobertaTokenizer.from_pretrained(args.pretrained_model)
+    config = RobertaConfig.from_pretrained(args.pretrained_model, num_labels=2)
     model = BaseBert.from_pretrained(pretrained_model_name_or_path=args.pretrained_model, config=config).cuda(args.gpu_id)
     print('\n')  # always print log
 
@@ -60,8 +59,7 @@ if __name__ == '__main__':
             inputs = {
                 'input_ids': batch[0].cuda(args.gpu_id),
                 'attention_mask': batch[1].cuda(args.gpu_id),
-                'token_type_ids': batch[2].cuda(args.gpu_id),
-                'labels': batch[3].cuda(args.gpu_id)
+                'labels': batch[2].cuda(args.gpu_id)
             }
             outputs = model.forward(**inputs)
             loss = outputs['loss']

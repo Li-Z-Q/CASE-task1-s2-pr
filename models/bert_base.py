@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
-from transformers import BertForSequenceClassification, BertPreTrainedModel, BertConfig, BertModel, BertForTokenClassification
+from transformers import BertForSequenceClassification, BertPreTrainedModel, BertConfig, RobertaModel, BertForTokenClassification
 
 class BaseBert(BertPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
-        self.bert = BertModel(config=config)
+        self.roberta = RobertaModel(config=config)
         self.linear = nn.Linear(config.hidden_size, 2)
         self.log_softmax = nn.LogSoftmax(dim=-1)
         self.nllloss = nn.NLLLoss(reduction='sum')
@@ -26,10 +26,9 @@ class BaseBert(BertPreTrainedModel):
 
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
-        outputs = self.bert(
+        outputs = self.roberta(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            token_type_ids=token_type_ids,
             position_ids=position_ids,
             head_mask=head_mask,
             inputs_embeds=inputs_embeds,
@@ -53,7 +52,6 @@ class BaseBert(BertPreTrainedModel):
         inputs['labels'] = torch.tensor([0]).cuda(gpu_id)
         inputs['input_ids'] = inputs['input_ids'].cuda(gpu_id)
         inputs['attention_mask'] = inputs['attention_mask'].cuda(gpu_id)
-        inputs['token_type_ids'] = inputs['token_type_ids'].cuda(gpu_id)
 
         outputs = self.forward(**inputs)
 

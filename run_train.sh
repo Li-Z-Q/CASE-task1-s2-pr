@@ -3,16 +3,16 @@
 source activate
 conda activate py38
 \
-export method=bert
+export method=roberta
 \
 export use_cache=False
-export cache_dir=./data/subtask2-sentence/cache_bert_base
+export cache_dir=./data/subtask2-sentence/cache_roberta_base
 export train_data_path=./data/subtask2-sentence/en-train-train.json
 export dev_data_path=./data/subtask2-sentence/en-train-dev.json
 \
-export pretrained_model=bert-base-uncased
+export pretrained_model=roberta-base
 \
-export gpu_id=3
+export gpu_id=2
 export random_seed=1234
 \
 export max_seq_len=64

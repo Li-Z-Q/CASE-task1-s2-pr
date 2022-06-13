@@ -1,7 +1,7 @@
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-method',default='bert', type=str)
+parser.add_argument('-method',default='roberta', type=str)
 
 parser.add_argument('-use_cache', default='False', type=str)
 parser.add_argument('-cache_dir', default='./data/subtask2-sentence/cache_bert_base')
