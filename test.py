@@ -3,44 +3,42 @@ import random
 import json
 from transformers import BertTokenizer, BertConfig, RobertaTokenizer, RobertaConfig
 from tools import result_displayer
-from models.bert import BaseBert
+from models import bert, roberta, multi_lingle
 
 
 def test():
     gpu_id = 3
 
     model_path = './saved_models/bert'
-    tokenizer = BertTokenizer.from_pretrained(model_path)
+    tokenizer_0 = BertTokenizer.from_pretrained(model_path)
     config = BertConfig.from_pretrained(model_path)
-    model_0 = BaseBert.from_pretrained(model_path, config=config).cuda(gpu_id)
+    model_0 = bert.Model.from_pretrained(model_path, config=config).cuda(gpu_id)
 
     model_path = './saved_models/multi_lingle'
-    tokenizer = BertTokenizer.from_pretrained(model_path)
+    tokenizer_1 = BertTokenizer.from_pretrained(model_path)
     config = BertConfig.from_pretrained(model_path)
-    model_1 = BaseBert.from_pretrained(model_path, config=config).cuda(gpu_id)
+    model_1 = multi_lingle.Model.from_pretrained(model_path, config=config).cuda(gpu_id)
 
     model_path = './saved_models/roberta'
-    tokenizer = RobertaTokenizer.from_pretrained(model_path)
-    config = BertConfig.from_pretrained(model_path)
-    model_1 = BaseBert.from_pretrained(model_path, config=config).cuda(gpu_id)
+    tokenizer_2 = RobertaTokenizer.from_pretrained(model_path)
+    config = RobertaConfig.from_pretrained(model_path)
+    model_2 = roberta.Model.from_pretrained(model_path, config=config).cuda(gpu_id)
 
-    texts = []
     gold_labels = []
-    f = open('/data/subtask2-sentence/en-train.json')
-    for l in f.readlines():
-        l = json.loads(l)
-        texts.append(l['sentence'])
-        gold_labels.append(l['label'])
-
-    random.seed(1234)
-    random.shuffle(texts)
-    random.seed(1234)
-    random.shuffle(gold_labels)
-
     pre_labels = []
-    gold_labels = gold_labels[:int(0.2 * len(gold_labels))]
-    for text in tqdm(texts[:int(0.2 * len(texts))]):
-        pre_labels.append(model.predict(text, tokenizer, gpu_id))
+    datas = json.load(open('./data/subtask2-sentence/en-train-dev.json'))
+    for data in tqdm(datas):
+        text = data['text']
+        gold_labels.append(data['label'])
+
+        pre_label_0 = model_0.predict(text, tokenizer_0, gpu_id)
+        pre_label_1 = model_1.predict(text, tokenizer_1, gpu_id)
+        pre_label_2 = model_2.predict(text, tokenizer_2, gpu_id)
+
+        if pre_label_0 + pre_label_1 + pre_label_2 > 1.5:
+            pre_labels.append(1)
+        else:
+            pre_labels.append(0)
 
     result_displayer.display_result(gold_labels, pre_labels)
 
