@@ -1,17 +1,28 @@
 from tqdm import tqdm
 import random
 import json
-from transformers import BertTokenizer, BertConfig
+from transformers import BertTokenizer, BertConfig, RobertaTokenizer, RobertaConfig
 from tools import result_displayer
-from models.bert_base import BaseBert
+from models.bert import BaseBert
 
 
 def test():
     gpu_id = 3
-    saved_dir = './saved_model'
-    tokenizer = BertTokenizer.from_pretrained(saved_dir)
-    config = BertConfig.from_pretrained(saved_dir)
-    model = BaseBert.from_pretrained(saved_dir, config=config).cuda(gpu_id)
+
+    model_path = './saved_models/bert'
+    tokenizer = BertTokenizer.from_pretrained(model_path)
+    config = BertConfig.from_pretrained(model_path)
+    model_0 = BaseBert.from_pretrained(model_path, config=config).cuda(gpu_id)
+
+    model_path = './saved_models/multi_lingle'
+    tokenizer = BertTokenizer.from_pretrained(model_path)
+    config = BertConfig.from_pretrained(model_path)
+    model_1 = BaseBert.from_pretrained(model_path, config=config).cuda(gpu_id)
+
+    model_path = './saved_models/roberta'
+    tokenizer = RobertaTokenizer.from_pretrained(model_path)
+    config = BertConfig.from_pretrained(model_path)
+    model_1 = BaseBert.from_pretrained(model_path, config=config).cuda(gpu_id)
 
     texts = []
     gold_labels = []

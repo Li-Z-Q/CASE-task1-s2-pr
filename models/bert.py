@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from transformers import BertForSequenceClassification, BertPreTrainedModel, BertConfig, BertModel, BertForTokenClassification
 
-class BaseBert(BertPreTrainedModel):
+class Model(BertPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
         self.bert = BertModel(config=config)
