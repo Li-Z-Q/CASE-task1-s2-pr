@@ -24,6 +24,16 @@ def test():
     config = RobertaConfig.from_pretrained(model_path)
     model_2 = roberta.Model.from_pretrained(model_path, config=config).cuda(gpu_id)
 
+    model_path = './saved_models/large'
+    tokenizer_3 = BertTokenizer.from_pretrained(model_path)
+    config = BertConfig.from_pretrained(model_path)
+    model_3 = multi_lingle.Model.from_pretrained(model_path, config=config).cuda(gpu_id)
+
+    model_path = './saved_models/over_sample'
+    tokenizer_4 = BertTokenizer.from_pretrained(model_path)
+    config = BertConfig.from_pretrained(model_path)
+    model_4 = multi_lingle.Model.from_pretrained(model_path, config=config).cuda(gpu_id)
+
     gold_labels = []
     pre_labels = []
     datas = json.load(open('./data/subtask2-sentence/en-train-dev.json'))
@@ -34,8 +44,10 @@ def test():
         pre_label_0 = model_0.predict(text, tokenizer_0, gpu_id)
         pre_label_1 = model_1.predict(text, tokenizer_1, gpu_id)
         pre_label_2 = model_2.predict(text, tokenizer_2, gpu_id)
+        pre_label_3 = model_3.predict(text, tokenizer_3, gpu_id)
+        pre_label_4 = model_4.predict(text, tokenizer_4, gpu_id)
 
-        if pre_label_0 + pre_label_1 + pre_label_2 > 1.5:
+        if pre_label_0 + pre_label_1 + pre_label_2 + pre_label_3 + pre_label_4 > 2.5:
             pre_labels.append(1)
         else:
             pre_labels.append(0)
