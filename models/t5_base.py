@@ -26,7 +26,7 @@ class Model(nn.Module):
         )
 
         last_hidden_state = outputs.last_hidden_state
-        sentence_embedding = torch.mean(last_hidden_state, dim=1)
+        sentence_embedding = last_hidden_state[:, 8, :]
         logits = self.log_softmax(self.linear(sentence_embedding))
 
         loss = self.nllloss(logits, labels)
