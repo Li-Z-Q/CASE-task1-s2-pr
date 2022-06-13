@@ -1,14 +1,14 @@
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-method',default='bert', type=str)
+parser.add_argument('-method',default='multi_lingle', type=str)
 
 parser.add_argument('-use_cache', default='False', type=str)
 parser.add_argument('-cache_dir', default='./data/subtask2-sentence/cache_bert_base')
 parser.add_argument('-train_data_path', default='./data/subtask2-sentence/en-train-train.json', type=str)
 parser.add_argument('-dev_data_path', default='./data/subtask2-sentence/en-train-dev.json', type=str)
 
-parser.add_argument('-pretrained_model', default='bert-base-uncased', type=str)
+parser.add_argument('-pretrained_model', default='bert-base-multilingual-uncased', type=str)
 
 parser.add_argument('-gpu_id', default=0, type=int)
 parser.add_argument('-random_seed', default=1234, type=int)
@@ -24,6 +24,9 @@ parser.add_argument('-weight_decay', default=0.01, type=float)
 parser.add_argument('-warm_ratio', default=1.0, type=float)
 parser.add_argument('-max_grad_norm', default=99999, type=float)
 parser.add_argument('-gradient_accumulation_steps', default=1, type=int)
+
+parser.add_argument('-multi_ling_1_path', default='./data/subtask2-sentence/es-train.json', type=str)
+parser.add_argument('-multi_ling_2_path', default='./data/subtask2-sentence/pr-train.json', type=str)
 
 
 args = parser.parse_args()
