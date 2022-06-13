@@ -3,7 +3,7 @@
 source activate
 conda activate py38
 
-export method=bert-base-uncased
+export method=bert
 
 export use_cache=False
 export cache_dir=./data/subtask2-sentence/cache_bert_base
