@@ -1,7 +1,7 @@
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-method',default='bert', type=str)
+parser.add_argument('-method',default='pos_ner', type=str)
 
 parser.add_argument('-use_cache', default='False', type=str)
 parser.add_argument('-cache_dir', default='./data/subtask2-sentence/cache_bert_base')
@@ -10,7 +10,7 @@ parser.add_argument('-dev_data_path', default='./data/subtask2-sentence/en-train
 
 parser.add_argument('-pretrained_model', default='bert-base-uncased', type=str)
 
-parser.add_argument('-gpu_id', default=0, type=int)
+parser.add_argument('-gpu_id', default=3, type=int)
 parser.add_argument('-random_seed', default=1234, type=int)
 
 parser.add_argument('-max_seq_len', default=64, type=int)
