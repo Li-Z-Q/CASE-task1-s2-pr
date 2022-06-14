@@ -61,7 +61,7 @@ if __name__ == '__main__':
         print(k + ": " + str(args.__dict__[k]))
     print()
 
-    gpu_id = 3
+    gpu_id = 1
 
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     config = BertConfig.from_pretrained("bert-base-uncased")
@@ -107,4 +107,5 @@ if __name__ == '__main__':
     tokenizer.save_pretrained(args.save_dir)
     config.save_pretrained(args.save_dir)
 
+    print("args.save_dir: ", args.save_dir)
     print('save done !')
