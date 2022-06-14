@@ -4,15 +4,16 @@ source activate
 conda activate py38
 \
 export method=re_pretrain
+export re_pretrain_model=normal
 \
 export use_cache=False
 export cache_dir=./data/subtask2-sentence/cache_bert_base
 export train_data_path=./data/subtask2-sentence/en-train-train.json
 export dev_data_path=./data/subtask2-sentence/en-train-dev.json
 \
-export pretrained_model=./saved_models/re_pretrain/re_pretrain_model
+export pretrained_model=./saved_models/re_pretrain/${re_pretrain_model}
 \
-export gpu_id=3
+export gpu_id=1
 export random_seed=1234
 \
 export max_seq_len=64
@@ -52,4 +53,4 @@ nohup python -u train.py \
   -max_grad_norm ${max_grad_norm} \
   -gradient_accumulation_steps ${gradient_accumulation_steps} \
   \
-  > ./logs/${method}/log.txt &
+  > ./logs/${method}/log_re_pretrain_model_${re_pretrain_model}.txt &
