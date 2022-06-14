@@ -41,14 +41,9 @@ class Model(nn.Module):
         input_ids = inputs['input_ids']
         attention_mask = inputs['attention_mask']
 
-        prompt = 'answer is yes or no : <extra_id_0>'
-        inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=64, padding='longest')
-        decoder_input_ids = inputs['input_ids']
-
         inputs = {
             'input_ids': input_ids.cuda(gpu_id),
             'attention_mask': attention_mask.cuda(gpu_id),
-            'decoder_input_ids': decoder_input_ids.cuda(gpu_id),
             'labels': torch.tensor(0).cuda(gpu_id)
         }
 
