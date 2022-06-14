@@ -3,14 +3,14 @@
 source activate
 conda activate py38
 \
-export method=bert
+export method=re_pretrain
 \
 export use_cache=False
 export cache_dir=./data/subtask2-sentence/cache_bert_base
 export train_data_path=./data/subtask2-sentence/en-train-train.json
 export dev_data_path=./data/subtask2-sentence/en-train-dev.json
 \
-export pretrained_model=bert-base-uncased
+export pretrained_model=./saved_models/re_pretrain/re_pretrain_model
 \
 export gpu_id=3
 export random_seed=1234
