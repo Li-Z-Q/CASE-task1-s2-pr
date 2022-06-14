@@ -1,9 +1,9 @@
 from tqdm import tqdm
 import random
 import json
-from transformers import BertTokenizer, BertConfig, RobertaTokenizer, RobertaConfig
+from transformers import BertTokenizer, BertConfig, RobertaTokenizer, RobertaConfig, T5Tokenizer, T5Config
 from tools import result_displayer
-from models import bert, roberta, multi_lingle
+from models import bert, roberta, multi_lingle, t5_encoder
 
 
 def test():
@@ -24,10 +24,12 @@ def test():
     config = RobertaConfig.from_pretrained(model_path)
     model_2 = roberta.Model.from_pretrained(model_path, config=config).cuda(gpu_id)
 
-    model_path = './saved_models/large'
-    tokenizer_3 = BertTokenizer.from_pretrained(model_path)
-    config = BertConfig.from_pretrained(model_path)
-    model_3 = multi_lingle.Model.from_pretrained(model_path, config=config).cuda(gpu_id)
+
+    pre_model = 't5-base'
+    model_path = './saved_models/t5_encoder/model.pt'
+    tokenizer_3 = T5Tokenizer.from_pretrained(pre_model, model_max_length=512)
+    config = T5Config.from_pretrained(pre_model)
+    model_3 = t5_encoder.Model(pre_model, config=config).load(model_path)
 
     model_path = './saved_models/over_sample'
     tokenizer_4 = BertTokenizer.from_pretrained(model_path)
