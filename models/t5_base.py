@@ -42,7 +42,7 @@ class Model(nn.Module):
         input_ids = inputs['input_ids']
         attention_mask = inputs['attention_mask']
 
-        prompt = 'answer is yes or no : <extra_id_0>'
+        prompt = 'answer is yes or no : <extra_id_0> '
         inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=64, padding='max_length')
         decoder_input_ids = inputs['input_ids']
 
