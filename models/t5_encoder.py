@@ -6,7 +6,7 @@ class Model(nn.Module):
     def __init__(self, pretrained_model, config):
         super().__init__()
         config.output_hidden_states = True
-        self.t5 = T5EncoderModel.from_pretrained(pretrained_model, config=config)
+        self.t5 = T5EncoderModel(config)
         self.linear = nn.Linear(config.hidden_size, 2)
         self.log_softmax = nn.LogSoftmax(dim=-1)
         self.nllloss = nn.NLLLoss(reduction='sum')
@@ -53,8 +53,8 @@ class Model(nn.Module):
         return pre_label
 
     def save(self, dir):
-        torch.save(self, dir + '/model.pt')
+        torch.save(self.state_dict(), dir + '/model.pt')
 
-    def load(self, path):
-        model = torch.load(path)
-        return model
+    def load(self, dir):
+        self.load_state_dict(torch.load(dir + '/model.pt'))
+        return self
