@@ -50,13 +50,16 @@ class Model(nn.Module):
             'input_ids': input_ids.cuda(gpu_id),
             'attention_mask': attention_mask.cuda(gpu_id),
             'decoder_input_ids': decoder_input_ids.cuda(gpu_id),
-            'labels': torch.tensor(0).cuda(gpu_id)
+            'labels': torch.tensor([0]).cuda(gpu_id)
         }
 
         outputs = self.forward(**inputs)
 
         pre_label = torch.argmax(outputs.logits).cpu()
         return pre_label
+
+    def save(self, dir):
+        torch.save(self.state_dict(), dir + '/model.pt')
 
     def load(self, dir):
         self.load_state_dict(torch.load(dir + '/model.pt'))
