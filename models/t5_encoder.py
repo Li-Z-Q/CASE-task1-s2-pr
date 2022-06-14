@@ -37,7 +37,7 @@ class Model(nn.Module):
         return outputs
 
     def predict(self, text, tokenizer, gpu_id):
-        inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=64, padding='longest')
+        inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=64, padding='max_length')
         input_ids = inputs['input_ids']
         attention_mask = inputs['attention_mask']
 
