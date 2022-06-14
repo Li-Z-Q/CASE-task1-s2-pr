@@ -38,12 +38,12 @@ class Model(nn.Module):
         return outputs
 
     def predict(self, text, tokenizer, gpu_id):
-        inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=64, padding='longest')
+        inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=64, padding='max_length')
         input_ids = inputs['input_ids']
         attention_mask = inputs['attention_mask']
 
         prompt = 'answer is yes or no : <extra_id_0>'
-        inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=64, padding='longest')
+        inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=64, padding='max_length')
         decoder_input_ids = inputs['input_ids']
 
         inputs = {
@@ -59,8 +59,8 @@ class Model(nn.Module):
         return pre_label
 
     def save(self, dir):
-        torch.save(self, dir + '/model.pt')
+        torch.save(self.state_dict(), dir + '/model.pt')
 
     def load(self, dir):
-        model = torch.load(dir + '/model.pt')
-        return model
+        self.load_state_dict(torch.load(dir + '/model.pt'))
+        return self

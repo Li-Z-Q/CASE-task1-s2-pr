@@ -12,7 +12,7 @@ export dev_data_path=./data/subtask2-sentence/en-train-dev.json
 \
 export pretrained_model=t5-base
 \
-export gpu_id=5
+export gpu_id=1
 export random_seed=1234
 \
 export max_seq_len=64
