@@ -4,6 +4,8 @@ import json
 import random
 from torch.utils.data import RandomSampler, DataLoader, TensorDataset, SequentialSampler
 from transformers import AdamW, get_linear_schedule_with_warmup, BertConfig
+import argparse
+import stanza
 
 
 def do_tokenize(raw_datas, tokenizer):
@@ -17,6 +19,25 @@ def do_tokenize(raw_datas, tokenizer):
 
     dataset = TensorDataset(input_ids, attention_mask, token_type_ids, labels)
     return dataset
+
+
+def add_noun_mask(datas):
+    stanza_nlp = stanza.Pipeline(lang='en', processors='tokenize, ner', use_gpu=False)
+    for i in range(len(datas['text'])):
+        new_text = ""
+
+        document = stanza_nlp(datas['text'][i])
+        for sentence in document.sentences:
+            for token in sentence.tokens:
+                ner = token.ner
+
+                if ner == 'O':
+                    new_text += (token.text + ' ')
+                else:
+                    new_text += '[MASK] '
+
+        datas['text'][i] = new_text
+    return datas
 
 def add_mask(datas):
     for i in range(len(datas['text'])):
@@ -32,8 +53,15 @@ def add_mask(datas):
     return datas
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-save_dir', default='../saved_models/re_pretrain/re_pretrain_model', type=str)
+    parser.add_argument('-method', default='noun', type=str)
+    args = parser.parse_args()
+    for k in args.__dict__:
+        print(k + ": " + str(args.__dict__[k]))
+    print()
 
-    gpu_id = 6
+    gpu_id = 3
 
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     config = BertConfig.from_pretrained("bert-base-uncased")
@@ -45,14 +73,20 @@ if __name__ == '__main__':
         'text': [d['text'] for d in train_raw_datas],
         'label': [d['text'] for d in train_raw_datas]
     }
-    train_raw_datas = add_mask(train_raw_datas)
+
+    if args.method == 'normal':
+        train_raw_datas = add_mask(train_raw_datas)
+    elif args.method == 'noun':
+        train_raw_datas = add_noun_mask(train_raw_datas)
+    else:
+        train_raw_datas = train_raw_datas
 
     train_dataset = do_tokenize(train_raw_datas, tokenizer)
     print("do tokenize done, len(train_dataset): ", len(train_dataset))
     train_dataloader = DataLoader(train_dataset, sampler=RandomSampler(train_dataset), batch_size=32)
 
     model.train()
-    for e in range(5):
+    for e in range(50):
         print("e: ", e)
         for batch in train_dataloader:
             inputs = {
@@ -69,7 +103,8 @@ if __name__ == '__main__':
             optimizer.step()
             model.zero_grad()
 
-    model.save_pretrained('../saved_models/re_pretrain/re_pretrain_model')
-    tokenizer.save_pretrained('../saved_models/re_pretrain/re_pretrain_model')
-    config.save_pretrained('../saved_models/re_pretrain/re_pretrain_model')
+    model.save_pretrained(args.save_dir)
+    tokenizer.save_pretrained(args.save_dir)
+    config.save_pretrained(args.save_dir)
+
     print('save done !')
