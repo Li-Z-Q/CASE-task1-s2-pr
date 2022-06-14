@@ -22,9 +22,11 @@ def pos_ner_fn(datas):
                 pos = word.pos
 
                 if ner != 'O':
-                    new_text += (word.text + ' ')
+                    new_text += (word.text + ' {} '.format(ner))
+                elif pos == 'VERB':
+                    new_text += (word.text + ' {} '.format(pos))
                 else:
-                    new_text += (pos + ' ')
+                    new_text += (word.text + ' ')
 
         datas['text'][i] = new_text
 

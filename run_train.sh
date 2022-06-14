@@ -12,7 +12,7 @@ export dev_data_path=./data/subtask2-sentence/en-train-dev.json
 \
 export pretrained_model=bert-base-uncased
 \
-export gpu_id=3
+export gpu_id=0
 export random_seed=1234
 \
 export max_seq_len=64
