@@ -9,7 +9,7 @@ from torch.utils.data import RandomSampler, DataLoader, TensorDataset, Sequentia
 
 
 def do_tokenize(raw_datas, tokenizer):
-    inputs = tokenizer(raw_datas['text'], return_tensors="pt", truncation=True, max_length=args.max_seq_len, padding='longest')
+    inputs = tokenizer(raw_datas['text'], return_tensors="pt", truncation=True, max_length=args.max_seq_len, padding='max_length')
     input_ids = inputs['input_ids']
     attention_mask = inputs['attention_mask']
 

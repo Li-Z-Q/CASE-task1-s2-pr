@@ -8,6 +8,7 @@ from tools import data_reader, random_setter, result_displayer
 from transformers import AdamW, get_linear_schedule_with_warmup
 
 def dev(model, dev_dataloader):
+    print('dev')
     model.eval()
     pre_labels = []
     gold_labels = []
@@ -25,6 +26,21 @@ def dev(model, dev_dataloader):
     assert len(gold_labels) == len(pre_labels)
 
     result = result_displayer.display_result(gold_labels, pre_labels)
+
+    # model.eval()
+    # gold_labels = []
+    # pre_labels = []
+    # import json
+    # from tqdm import tqdm
+    # datas = json.load(open('./data/subtask2-sentence/en-train-dev.json'))
+    # with torch.no_grad():
+    #     for data in tqdm(datas):
+    #         text = data['text']
+    #         gold_labels.append(data['label'])
+    #         pre_label_3 = model.predict(text, tokenizer, args.gpu_id)
+    #         pre_labels += pre_label_3
+    # result_displayer.display_result(gold_labels, pre_labels)
+
     return result
 
 if __name__ == '__main__':

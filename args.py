@@ -10,7 +10,7 @@ parser.add_argument('-dev_data_path', default='./data/subtask2-sentence/en-train
 
 parser.add_argument('-pretrained_model', default='t5-base', type=str)
 
-parser.add_argument('-gpu_id', default=6, type=int)
+parser.add_argument('-gpu_id', default=5, type=int)
 parser.add_argument('-random_seed', default=1234, type=int)
 
 parser.add_argument('-max_seq_len', default=64, type=int)

@@ -37,24 +37,24 @@ class Model(nn.Module):
         return outputs
 
     def predict(self, text, tokenizer, gpu_id):
-        inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=64, padding='longest')
+        inputs = tokenizer([text], return_tensors="pt", truncation=True, max_length=64, padding='max_length')
         input_ids = inputs['input_ids']
         attention_mask = inputs['attention_mask']
 
         inputs = {
             'input_ids': input_ids.cuda(gpu_id),
             'attention_mask': attention_mask.cuda(gpu_id),
-            'labels': torch.tensor(0).cuda(gpu_id)
+            'labels': torch.tensor([0]).cuda(gpu_id)
         }
 
         outputs = self.forward(**inputs)
 
-        pre_label = torch.argmax(outputs.logits).cpu()
+        pre_label = torch.argmax(outputs.logits, dim=1).cpu().tolist()
         return pre_label
 
     def save(self, dir):
         torch.save(self.state_dict(), dir + '/model.pt')
 
     def load(self, dir):
-        model = self.load_state_dict(dir + '/model.pt')
-        return model
+        self.load_state_dict(dir + '/model.pt')
+        return self
