@@ -53,8 +53,8 @@ class Model(nn.Module):
         return pre_label
 
     def save(self, dir):
-        torch.save(self, dir + '/model.pt')
+        torch.save(self.state_dict(), dir + '/model.pt')
 
     def load(self, dir):
-        model = torch.load(dir + '/model.pt')
+        model = self.load_state_dict(dir + '/model.pt')
         return model
