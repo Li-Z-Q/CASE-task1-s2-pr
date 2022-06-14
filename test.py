@@ -29,7 +29,7 @@ def test():
     model_path = './saved_models/t5_encoder/model.pt'
     tokenizer_3 = T5Tokenizer.from_pretrained(pre_model, model_max_length=512)
     config = T5Config.from_pretrained(pre_model)
-    model_3 = t5_encoder.Model(pre_model, config=config).load(model_path)
+    model_3 = t5_encoder.Model(pre_model, config=config).load(model_path).cuda(gpu_id)
 
     model_path = './saved_models/over_sample'
     tokenizer_4 = BertTokenizer.from_pretrained(model_path)
