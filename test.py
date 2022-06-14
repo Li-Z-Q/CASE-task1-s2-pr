@@ -8,7 +8,7 @@ from models import bert, roberta, multi_lingle, t5_encoder, t5
 
 
 def test():
-    gpu_id = 6
+    gpu_id = 4
 
     # model_dir = './saved_models/bert'
     # tokenizer_0 = BertTokenizer.from_pretrained(model_dir)
