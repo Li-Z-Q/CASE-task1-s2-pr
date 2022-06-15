@@ -7,7 +7,7 @@ parser.add_argument('-multi', default='False', type=str)
 parser.add_argument('-random_seed', default=1234, type=int)
 
 parser.add_argument('-use_cache', default='False', type=str)
-parser.add_argument('-cache_dir', default='./data/subtask2-sentence/cache_bert_base')
+parser.add_argument('-cache_dir', default='./data/subtask2-sentence/cache_xlm_roberta_large_base')
 parser.add_argument('-train_data_path', default='./data/subtask2-sentence/en-train-train.json', type=str)
 parser.add_argument('-dev_data_path', default='./data/subtask2-sentence/en-train-dev.json', type=str)
 
