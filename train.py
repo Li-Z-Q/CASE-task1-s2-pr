@@ -3,7 +3,7 @@ from args import args
 import torch
 import torch.nn as nn
 from models.bert_base import BaseBert
-from transformers import RobertaTokenizer, RobertaConfig
+from transformers import XLMRobertaTokenizer, XLMRobertaConfig
 from tools import data_reader, random_setter, result_displayer
 from transformers import AdamW, get_linear_schedule_with_warmup
 
@@ -31,8 +31,11 @@ if __name__ == '__main__':
 
     random_setter.set_random()
 
-    tokenizer = RobertaTokenizer.from_pretrained(args.pretrained_model)
-    config = RobertaConfig.from_pretrained(args.pretrained_model, num_labels=2)
+    tokenizer = XLMRobertaTokenizer.from_pretrained(args.pretrained_model)
+    config = XLMRobertaConfig.from_pretrained(args.pretrained_model, num_labels=2)
+    config.hidden_size = 1024
+    config.num_attention_heads = 16
+    config.num_hidden_layers = 24
     model = BaseBert.from_pretrained(pretrained_model_name_or_path=args.pretrained_model, config=config).cuda(args.gpu_id)
     print('\n')  # always print log
 
@@ -78,7 +81,7 @@ if __name__ == '__main__':
                 # print("------------------ step: {0}/{1}".format(global_step, total_step))
 
         dev_result = dev(model, dev_dataloader)
-        save_dir = './saved_models/' + args.method
+        save_dir = './saved_models/' + args.method + '/multi_' + args.multi + '_' + str(args.random_seed)
         if dev_result['f'] > best_dev_result:
             tokenizer.save_pretrained(save_dir)
             model.save_pretrained(save_dir)

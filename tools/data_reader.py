@@ -19,6 +19,30 @@ def do_tokenize(raw_datas, tokenizer):
     return dataset
 
 
+def add_multi_ling_data(datas):
+    f = open(args.multi_ling_1_path)
+    print("args.multi_ling_1_path: ", args.multi_ling_1_path)
+    for l in f.readlines():
+        l = json.loads(l)
+        datas['text'].append(l['sentence'])
+        datas['label'].append(l['label'])
+
+    f = open(args.multi_ling_2_path)
+    print("args.multi_ling_2_path: ", args.multi_ling_2_path)
+    for l in f.readlines():
+        l = json.loads(l)
+        datas['text'].append(l['sentence'])
+        datas['label'].append(l['label'])
+
+    random.seed(args.random_seed)
+    random.shuffle(datas['text'])
+    random.seed(args.random_seed)
+    random.shuffle(datas['label'])
+
+    print("add_multi_ling_data done")
+    return datas
+
+
 def read_data(tokenizer):
 
     if os.path.exists(args.cache_dir) and args.use_cache == 'True':
@@ -32,6 +56,8 @@ def read_data(tokenizer):
             'text': [d['text'] for d in train_raw_datas],
             'label': [d['label'] for d in train_raw_datas]
         }
+        if args.multi == 'True':
+            train_raw_datas = add_multi_ling_data(train_raw_datas)
         print("Counter([d['label'] for d in train_raw_datas]): ", Counter([l for l in train_raw_datas['label']]))
 
         dev_raw_datas = json.load(open(args.dev_data_path))

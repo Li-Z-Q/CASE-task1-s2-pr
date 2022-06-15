@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
-from transformers import BertForSequenceClassification, BertPreTrainedModel, BertConfig, RobertaModel, BertForTokenClassification
+from transformers import BertPreTrainedModel, XLMRobertaModel
 
 class BaseBert(BertPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
-        self.roberta = RobertaModel(config=config)
+        self.roberta = XLMRobertaModel(config=config)
         self.linear = nn.Linear(config.hidden_size, 2)
         self.log_softmax = nn.LogSoftmax(dim=-1)
         self.nllloss = nn.NLLLoss(reduction='sum')
