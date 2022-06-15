@@ -21,6 +21,25 @@ def do_tokenize(raw_datas, tokenizer):
     return dataset
 
 
+def add_verb_mask(datas):
+    stanza_nlp = stanza.Pipeline(lang='en', processors='tokenize, pos', use_gpu=False)
+    for i in range(len(datas['text'])):
+        new_text = ""
+
+        document = stanza_nlp(datas['text'][i])
+        for sentence in document.sentences:
+            for word in sentence.words:
+                pos = word.pos
+
+                if pos == 'VERB' and random.randint(0, 1000) < 500:
+                    new_text += '[MASK] '
+                else:
+                    new_text += (word.text + ' ')
+
+        datas['text'][i] = new_text
+    return datas
+
+
 def add_noun_mask(datas):
     stanza_nlp = stanza.Pipeline(lang='en', processors='tokenize, ner', use_gpu=False)
     for i in range(len(datas['text'])):
@@ -31,10 +50,10 @@ def add_noun_mask(datas):
             for token in sentence.tokens:
                 ner = token.ner
 
-                if ner == 'O':
-                    new_text += (token.text + ' ')
-                else:
+                if ner != 'O' and random.randint(0, 1000) < 150:
                     new_text += '[MASK] '
+                else:
+                    new_text += (token.text + ' ')
 
         datas['text'][i] = new_text
     return datas
@@ -55,7 +74,7 @@ def add_mask(datas):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-save_dir', default='../saved_models/re_pretrain/re_pretrain_model', type=str)
-    parser.add_argument('-method', default='noun', type=str)
+    parser.add_argument('-method', default='verb', type=str)
     args = parser.parse_args()
     for k in args.__dict__:
         print(k + ": " + str(args.__dict__[k]))
@@ -78,6 +97,8 @@ if __name__ == '__main__':
         train_raw_datas = add_mask(train_raw_datas)
     elif args.method == 'noun':
         train_raw_datas = add_noun_mask(train_raw_datas)
+    elif args.method == 'verb':
+        train_raw_datas = add_verb_mask(train_raw_datas)
     else:
         train_raw_datas = train_raw_datas
 

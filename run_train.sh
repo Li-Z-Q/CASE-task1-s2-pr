@@ -4,7 +4,7 @@ source activate
 conda activate py38
 \
 export method=re_pretrain
-export re_pretrain_model=normal
+export re_pretrain_model=verb
 \
 export use_cache=False
 export cache_dir=./data/subtask2-sentence/cache_bert_base
@@ -13,7 +13,7 @@ export dev_data_path=./data/subtask2-sentence/en-train-dev.json
 \
 export pretrained_model=./saved_models/re_pretrain/${re_pretrain_model}
 \
-export gpu_id=1
+export gpu_id=8
 export random_seed=1234
 \
 export max_seq_len=64
