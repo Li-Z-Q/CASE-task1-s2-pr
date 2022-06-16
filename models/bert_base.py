@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from transformers import BertPreTrainedModel, XLMRobertaModel
 
-class BaseBert(BertPreTrainedModel):
+class Model(BertPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
         self.roberta = XLMRobertaModel(config=config)
@@ -37,8 +37,8 @@ class BaseBert(BertPreTrainedModel):
             return_dict=return_dict,
         )
 
-        sentence_embedding = outputs.pooler_output
-        logits = self.log_softmax(self.linear(sentence_embedding))
+        last_hidden_state = outputs.last_hidden_state
+        logits = self.log_softmax(self.linear(last_hidden_state[:, 0, :]))
         loss = self.nllloss(logits, labels)
 
         outputs['LZQ'] = 'LZQ'
