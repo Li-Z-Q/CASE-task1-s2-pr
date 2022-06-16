@@ -2,7 +2,7 @@ from args import args
 
 import torch
 import torch.nn as nn
-from models.bert_base import BaseBert
+from models.bert_base import Model
 from transformers import XLMRobertaTokenizer, XLMRobertaConfig
 from tools import data_reader, random_setter, result_displayer
 from transformers import AdamW, get_linear_schedule_with_warmup
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     config.hidden_size = 1024
     config.num_attention_heads = 16
     config.num_hidden_layers = 24
-    model = BaseBert.from_pretrained(pretrained_model_name_or_path=args.pretrained_model, config=config).cuda(args.gpu_id)
+    model = Model.from_pretrained(pretrained_model_name_or_path=args.pretrained_model, config=config).cuda(args.gpu_id)
     print('\n')  # always print log
 
     train_dataloader, dev_dataloader = data_reader.read_data(tokenizer=tokenizer)
